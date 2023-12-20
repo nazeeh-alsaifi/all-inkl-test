@@ -19,4 +19,4 @@ Route::get('/', function () {
 });
 
 
-Route::post('/search', [Controller::class, 'search'])->name('search');
+Route::get('/search', [Controller::class, 'search'])->name('search');

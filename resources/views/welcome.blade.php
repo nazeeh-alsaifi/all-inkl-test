@@ -17,6 +17,8 @@
     </script>
 
 
+    @include('googleChartPartial')
+
 </head>
 
 <body>
@@ -25,12 +27,12 @@
             <h2 class="text-center">Welcome to Database Query Tool</h2>
         </div>
         <div class="row">
-            <form action="{{ route('search') }}" method="POST">
+            <form action="{{ route('search') }}" method="GET">
                 @csrf
                 <div class="row g-3 border border-1 my-2 p-3">
                     <div class="col-md-6">
                         <label for="mysqlHost" class="form-label">MySQL Host</label>
-                        <input required value="{{ old('mysqlHost') }}" type="text"
+                        <input required value="{{ old('mysqlHost') ?? ($validated['mysqlHost'] ?? '') }}" type="text"
                             class="form-control @error('mysqlHost') is-invalid @enderror" id="mysqlHost"
                             name="mysqlHost" placeholder="MySQL Host">
                         @error('mysqlHost')
@@ -41,9 +43,9 @@
                     </div>
                     <div class="col-md-6">
                         <label for="mysqlDatabase" class="form-label">MySQL Database</label>
-                        <input required value="{{ old('mysqlDatabase') }}" type="text"
-                            class="form-control @error('mysqlDatabase') is-invalid @enderror" id="mysqlDatabase"
-                            name="mysqlDatabase" placeholder="MySQL Database">
+                        <input required value="{{ old('mysqlDatabase') ?? ($validated['mysqlDatabase'] ?? '') }}"
+                            type="text" class="form-control @error('mysqlDatabase') is-invalid @enderror"
+                            id="mysqlDatabase" name="mysqlDatabase" placeholder="MySQL Database">
                         @error('mysqlDatabase')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -52,9 +54,9 @@
                     </div>
                     <div class="col-md-6">
                         <label for="mysqlUsername" class="form-label">Mysql Username</label>
-                        <input required value="{{ old('mysqlUsername') }}" type="text"
-                            class="form-control @error('mysqlUsername') is-invalid @enderror" id="mysqlUsername"
-                            name="mysqlUsername" placeholder="Mysql Username">
+                        <input required value="{{ old('mysqlUsername') ?? ($validated['mysqlUsername'] ?? '') }}"
+                            type="text" class="form-control @error('mysqlUsername') is-invalid @enderror"
+                            id="mysqlUsername" name="mysqlUsername" placeholder="Mysql Username">
                         @error('mysqlUsername')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -63,9 +65,9 @@
                     </div>
                     <div class="col-md-6">
                         <label for="mysqlPassword" class="form-label">Mysql Password</label>
-                        <input required value="{{ old('mysqlPassword') }}" type="password"
-                            class="form-control @error('mysqlPassword') is-invalid @enderror" id="mysqlPassword"
-                            name="mysqlPassword" placeholder="Mysql Password">
+                        <input required value="{{ old('mysqlPassword') ?? ($validated['mysqlPassword'] ?? '') }}"
+                            type="password" class="form-control @error('mysqlPassword') is-invalid @enderror"
+                            id="mysqlPassword" name="mysqlPassword" placeholder="Mysql Password">
                         @error('mysqlPassword')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -78,7 +80,7 @@
                     <div class="col-md-12">
                         <label for="mysqlQuery" class="form-label">Mysql Query</label>
                         <textarea required value="{{ old('mysqlQuery') }}" class="form-control @error('mysqlQuery') is-invalid @enderror"
-                            id="mysqlQuery" name="mysqlQuery" rows="3">{{ old('mysqlQuery') }}</textarea>
+                            id="mysqlQuery" name="mysqlQuery" rows="3">{{ old('mysqlQuery') ?? ($validated['mysqlQuery'] ?? '') }}</textarea>
                         @error('mysqlQuery')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -90,6 +92,26 @@
                     </div>
                 </div>
             </form>
+        </div>
+
+
+        <div class="row my-2">
+            <h2 class="text-center">Output</h2>
+        </div>
+
+        <div class="row g-3 border border-1 my-2 p-3" id="output">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @else
+                <!--Div that will hold the pie chart-->
+                <div id="chart_div"></div>
+            @endif
         </div>
 
 
